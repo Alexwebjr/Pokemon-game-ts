@@ -12,16 +12,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    pokemons: {
-      type: Array,
-      required: true,
-    },
-  },
-  methods: {},
-};
+<script setup lang="ts">
+import { Pokemon } from "../models/pokemon";
+
+defineProps<{ pokemons: Pokemon[] }>();
 </script>
 
 <style>
@@ -31,6 +25,7 @@ ul {
 }
 li {
   background-color: white;
+  color: black;
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   cursor: pointer;
@@ -40,6 +35,7 @@ li {
 
 li:hover {
   background-color: rgba(0, 0, 0, 0.05);
+  color: #4caf50;
 }
 
 .options-container {

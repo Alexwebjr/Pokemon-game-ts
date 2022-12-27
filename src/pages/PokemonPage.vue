@@ -25,57 +25,51 @@
   </div>
 </template>
 
-<script>
-import PokemonPicture from '@/components/PokemonPicture';
-import PokemonOptions from '@/components/PokemonOptions';
-import getPokemonOptions from '@/helpers/getPokemonOptions';
-//console.log(getPokemonOptions());
-export default {
-  components: {
-    PokemonPicture,
-    PokemonOptions,
-  },
-  data() {
-    return {
-      pokemonArr: [],
-      pokemon: null,
-      showPokemon: false,
-      showAnswer: false,
-      message: '',
-      score: 0,
-    };
-  },
-  methods: {
-    async mixPokemonArray() {
-      this.pokemonArr = await getPokemonOptions();
+<script setup lang="ts">
+import { ref } from "vue";
+import PokemonPicture from "../components/PokemonPicture.vue";
+import PokemonOptions from "../components/PokemonOptions.vue";
+import getPokemonOptions from "../helpers/getPokemonOptions";
+import { Pokemon } from "../models/pokemon";
 
-      const rndInt = Math.floor(Math.random() * 4);
-      this.pokemon = this.pokemonArr[rndInt];
-    },
-    checkAnswer(pokemonId) {
-      this.showPokemon = true;
-      this.showAnswer = true;
+const pokemonArr = ref<Pokemon[]>([]);
+const pokemon = ref<Pokemon>();
+const showPokemon = ref(false);
+const showAnswer = ref(false);
+const message = ref("");
+const score = ref(0);
 
-      if (pokemonId === this.pokemon.id) {
-        this.message = `CORRECT! Is ${this.pokemon.name}!`;
-        this.score += 1;
-      } else {
-        this.message = `INCORRECT! Is ${this.pokemon.name}!`;
-        this.score = 0;
-      }
-    },
-    newGame() {
-      this.pokemonArr = [];
-      this.showPokemon = false;
-      this.showAnswer = false;
-      this.pokemon = null;
-      this.mixPokemonArray();
-    },
-  },
-  mounted() {
-    this.mixPokemonArray();
-  },
+//Methods
+const mixPokemonArray = async () => {
+  pokemonArr.value = await getPokemonOptions();
+  const randomInt = Math.floor(Math.random() * 4);
+  pokemon.value = pokemonArr.value[randomInt];
 };
+
+const checkAnswer = (pokemonId: number) => {
+  if (!pokemon.value) return;
+
+  showPokemon.value = true;
+  showAnswer.value = true;
+
+  if (pokemonId === pokemon.value.id) {
+    message.value = `CORRECT! Is ${pokemon.value.name}!`;
+    score.value += 1;
+  } else {
+    message.value = `INCORRECT! Is ${pokemon.value.name}!`;
+    score.value = 0;
+  }
+};
+
+const newGame = () => {
+  pokemonArr.value = [];
+  showPokemon.value = false;
+  showAnswer.value = false;
+  pokemon.value = undefined;
+  mixPokemonArray();
+};
+
+mixPokemonArray();
 </script>
 
 <style scoped>

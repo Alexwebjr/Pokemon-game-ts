@@ -10,25 +10,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    pokemonId: {
-      type: Number,
-      required: true,
-    },
-    showPokemon: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-  },
-  computed: {
-    imgSrc() {
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${this.pokemonId}.svg`;
-    },
-  },
-};
+<script setup lang="ts">
+import { computed } from "vue";
+
+const props = defineProps<{
+  pokemonId: number;
+  showPokemon: boolean;
+}>();
+
+const imgSrc = computed(
+  () =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${props.pokemonId}.svg`
+);
 </script>
 
 <style scoped>
